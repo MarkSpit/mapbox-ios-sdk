@@ -1389,7 +1389,8 @@
 
     UITapGestureRecognizer *singleTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
     singleTapRecognizer.numberOfTouchesRequired = 1;
-    [singleTapRecognizer requireGestureRecognizerToFail:doubleTapRecognizer];
+    //Disabled next line: waiting took to long... bad UX
+    //[singleTapRecognizer requireGestureRecognizerToFail:doubleTapRecognizer];
     singleTapRecognizer.delegate = self;
 
     UILongPressGestureRecognizer *longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
