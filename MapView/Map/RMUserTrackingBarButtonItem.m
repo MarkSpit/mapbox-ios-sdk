@@ -349,7 +349,7 @@ typedef enum : NSUInteger {
 
                                  _buttonImageView.hidden = NO;
 
-                                 if (_state == RMUserTrackingButtonStateActivity)
+                                 if (_state != RMUserTrackingButtonStateActivity)
                                      [_activityView stopAnimating];
 
                                  [UIView animateWithDuration:0.25 animations:^(void)
