@@ -35,7 +35,7 @@
     RMFractalTileProjection *_tileProjection;
 }
 
-@synthesize minZoom = _minZoom, maxZoom = _maxZoom, cacheable = _cacheable, opaque = _opaque;
+@synthesize minZoom = _minZoom, maxZoom = _maxZoom, cacheable = _cacheable, opaque = _opaque, blackWhite = _blackWhite;
 
 - (id)init
 {
@@ -50,6 +50,7 @@
 
     self.cacheable = YES;
     self.opaque = YES;
+    self.blackWhite = NO;
 
     return self;
 }

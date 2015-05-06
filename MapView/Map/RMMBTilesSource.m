@@ -44,7 +44,7 @@
     NSString *_uniqueTilecacheKey;
 }
 
-@synthesize cacheable = _cacheable, opaque = _opaque;
+@synthesize cacheable = _cacheable, opaque = _opaque, blackWhite = _blackWhite;
 
 - (id)initWithTileSetResource:(NSString *)name
 {
@@ -136,8 +136,31 @@
     {
         [[NSNotificationCenter defaultCenter] postNotificationName:RMTileRetrieved object:[NSNumber numberWithUnsignedLongLong:RMTileKey(tile)]];
     });
+    
+    if(image && self.blackWhite)
+        image = [self convertImageToBlackAndWhite:image];
 
     return image;
+}
+
+-(UIImage*)convertImageToBlackAndWhite:(UIImage*)image
+{
+    CGRect imageRect = CGRectMake(0, 0, image.size.width, image.size.height);
+    
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceGray();
+    
+    CGContextRef context = CGBitmapContextCreate(nil, image.size.width, image.size.height, 8, 0, colorSpace, kCGImageAlphaNone);
+    CGContextDrawImage(context, imageRect, [image CGImage]);
+    
+    CGImageRef imageRef = CGBitmapContextCreateImage(context);
+    
+    UIImage *newImage = [UIImage imageWithCGImage:imageRef];
+    
+    CGColorSpaceRelease(colorSpace);
+    CGContextRelease(context);
+    CFRelease(imageRef);
+    
+    return newImage;
 }
 
 - (BOOL)tileSourceHasTile:(RMTile)tile

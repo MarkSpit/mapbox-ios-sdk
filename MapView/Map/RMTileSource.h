@@ -57,6 +57,8 @@
 /** A Boolean value indicating whether the tiles from this source are opaque. Setting this correctly is important when using RMCompositeSource so that alpha transparency can be preserved when compositing tile images. */
 @property (nonatomic, assign, getter=isOpaque) BOOL opaque;
 
+@property (nonatomic, assign) BOOL blackWhite;
+
 @property (nonatomic, readonly) RMFractalTileProjection *mercatorToTileProjection;
 @property (nonatomic, readonly) RMProjection *projection;
 
