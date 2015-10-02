@@ -55,6 +55,9 @@ typedef enum : NSUInteger {
 /** The marker object's label text background color. Defaults to clear. */
 @property (nonatomic, strong) UIColor *textBackgroundColor;
 
+/** A custom content view for the marker. The content view is shown when first set. */
+@property (nonatomic, strong) UIView  *contentView;
+
 /** The font used for labels when another font is not explicitly requested. The default is the system font with size `15`. */
 + (UIFont *)defaultFont;
 
