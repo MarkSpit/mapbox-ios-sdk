@@ -1929,7 +1929,7 @@
             
             // If a custom contentView was assigned to the marker then we would assigned that to contentView of _currentCallout.
             // By this assignment title/subtitle/titleView/subtitleView are all ignored and custom content view will be used.
-            if ([anAnnotation.layer isKindOfClass:[RMMarker class]] && ((RMMarker *)anAnnotation.layer).contentView) {
+            if ([anAnnotation.layer respondsToSelector:@selector(contentView)] && ((RMMarker *)anAnnotation.layer).contentView) {
                 _currentCallout.contentView = ((RMMarker *)anAnnotation.layer).contentView;
             }
 
