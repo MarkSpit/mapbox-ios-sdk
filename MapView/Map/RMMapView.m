@@ -138,6 +138,7 @@
     BOOL _delegateHasSingleTapTwoFingersOnMap;
     BOOL _delegateHasLongPressOnMap;
     BOOL _delegateHasTapOnAnnotation;
+    BOOL _delegateHasTapOnMultiAnnotation;
     BOOL _delegateHasDoubleTapOnAnnotation;
     BOOL _delegateHasLongPressOnAnnotation;
     BOOL _delegateHasTapOnCalloutAccessoryControlForAnnotation;
@@ -697,6 +698,7 @@
     _delegateHasLongPressOnMap = [_delegate respondsToSelector:@selector(longPressOnMap:at:)];
 
     _delegateHasTapOnAnnotation = [_delegate respondsToSelector:@selector(tapOnAnnotation:onMap:)];
+    _delegateHasTapOnMultiAnnotation = [_delegate respondsToSelector:@selector(tapOnMultiAnnotation:onMap:at:)];
     _delegateHasDoubleTapOnAnnotation = [_delegate respondsToSelector:@selector(doubleTapOnAnnotation:onMap:)];
     _delegateHasLongPressOnAnnotation = [_delegate respondsToSelector:@selector(longPressOnAnnotation:onMap:)];
     _delegateHasTapOnCalloutAccessoryControlForAnnotation = [_delegate respondsToSelector:@selector(tapOnCalloutAccessoryControl:forAnnotation:onMap:)];
@@ -1686,7 +1688,15 @@
     // See if tap was on an annotation layer or marker label and send delegate protocol method
     if ([hit isKindOfClass:[RMMapLayer class]])
     {
-        [self tapOnAnnotation:[((RMMapLayer *)hit) annotation] atPoint:[recognizer locationInView:self]];
+        if(_overlayView.multiHit)
+        {
+            if (_delegateHasTapOnMultiAnnotation)
+            {
+                [_delegate tapOnMultiAnnotation:[_overlayView.multiHitLayers valueForKey:@"annotation"] onMap:self at:[recognizer locationInView:self]];
+            }
+        }
+        else
+            [self tapOnAnnotation:[((RMMapLayer *)hit) annotation] atPoint:[recognizer locationInView:self]];
     }
     else if (superlayer != nil && [superlayer isKindOfClass:[RMMarker class]])
     {

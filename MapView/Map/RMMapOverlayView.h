@@ -32,6 +32,10 @@
 
 @interface RMMapOverlayView : UIView
 
+@property (nonatomic) bool multiHit;
+@property (nonatomic, retain) NSArray* multiHitLayers;
+
+
 - (NSUInteger)sublayersCount;
 
 - (void)addSublayer:(CALayer *)aLayer;

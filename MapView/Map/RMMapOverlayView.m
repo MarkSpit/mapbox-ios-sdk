@@ -44,9 +44,9 @@
 {
     if (!(self = [super initWithFrame:frame]))
         return nil;
-
+    
     self.layer.masksToBounds = NO;
-
+    
     return self;
 }
 
@@ -82,31 +82,59 @@
 
 - (CALayer *)overlayHitTest:(CGPoint)point
 {
+    self.multiHit = NO;
+    self.multiHitLayers = @[];
     RMMapView *mapView = ((RMMapView *)self.superview);
-
+    
     // Here we be sure to hide disabled but visible annotations' layers to
     // avoid touch events, then re-enable them after scoring the hit. We
     // also show the user location if enabled and we're in tracking mode,
-    // since its layer is hidden and we want a possible hit. 
+    // since its layer is hidden and we want a possible hit.
     //
     NSPredicate *annotationPredicate = [NSPredicate predicateWithFormat:@"SELF.enabled = NO AND SELF.layer != %@ AND SELF.layer.isHidden = NO", [NSNull null]];
-
+    
     NSArray *disabledVisibleAnnotations = [mapView.annotations filteredArrayUsingPredicate:annotationPredicate];
-
+    
     for (RMAnnotation *annotation in disabledVisibleAnnotations)
         annotation.layer.hidden = YES;
-
+    
     if (mapView.userLocation.enabled && mapView.userTrackingMode == RMUserTrackingModeFollowWithHeading)
         mapView.userLocation.layer.hidden = NO;
-
+    
     CALayer *hit = [self.layer hitTest:point];
+    
+    if([hit isKindOfClass:[RMMarker class]])
+    {
+        NSMutableArray* hitLayers = [[NSMutableArray alloc] init];
+        CALayer *hit2 = hit;
+        
+        while (hit2) {
+            if([hit2 isKindOfClass:[RMMarker class]])
+            {
+                [hitLayers addObject:hit2];
+                ((RMMarker*)hit2).annotation.layer.hidden = YES;
+                disabledVisibleAnnotations = [disabledVisibleAnnotations arrayByAddingObject:((RMMarker*)hit2).annotation];
+                hit2 = [self.layer hitTest:point];
+            }
+            else
+            {
+                hit2 = nil;
+            }
 
+        }
+        if(hitLayers.count > 1)
+        {
+            self.multiHitLayers = hitLayers;
+            self.multiHit = YES;
+        }
+    }
+    
     if (mapView.userLocation.enabled && mapView.userTrackingMode == RMUserTrackingModeFollowWithHeading)
         mapView.userLocation.layer.hidden = YES;
-
+    
     for (RMAnnotation *annotation in disabledVisibleAnnotations)
         annotation.layer.hidden = NO;
-
+    
     return hit;
 }
 
