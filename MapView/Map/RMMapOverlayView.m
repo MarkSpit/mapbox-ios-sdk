@@ -103,16 +103,16 @@
     
     CALayer *hit = [self.layer hitTest:point];
     
-    if([hit isKindOfClass:[RMMarker class]])
+    if([hit isKindOfClass:[RMMapLayer class]])
     {
         NSMutableArray* hitLayers = [[NSMutableArray alloc] init];
         CALayer *hit2 = hit;
         
         while (hit2) {
-            if([hit2 isKindOfClass:[RMMarker class]])
+            if([hit2 isKindOfClass:[RMMapLayer class]])
             {
                 [hitLayers addObject:hit2];
-                ((RMMarker*)hit2).annotation.layer.hidden = YES;
+                ((RMMapLayer*)hit2).annotation.layer.hidden = YES;
                 disabledVisibleAnnotations = [disabledVisibleAnnotations arrayByAddingObject:((RMMarker*)hit2).annotation];
                 hit2 = [self.layer hitTest:point];
             }
